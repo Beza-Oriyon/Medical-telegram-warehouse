@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: postgres_raw
+    database: medical_warehouse
+    schema: public
+    tables:
+      - name: staging_telegram_messages
+        description: Raw Telegram messages from scraper and loader (399 rows loaded)
+        columns:
+          - name: message_id
+            tests:
+              - unique
+              - not_null
+          - name: channel_name
+            tests:
+              - not_null
+          - name: message_date
+            tests:
+              - not_null
+          - name: message_text
+          - name: has_media
+          - name: image_path
+          - name: views
+          - name: forwards
+          - name: loaded_at
