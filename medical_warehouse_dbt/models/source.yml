@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: raw_postgres
+    database: medical_warehouse
+    schema: public  # change if your schema is different
+    tables:
+      - name: staging_telegram_messages
+        description: Raw Telegram messages from scraper/loader
+        columns:
+          - name: message_id
+            tests:
+              - unique
+              - not_null
+          - name: channel_name
+            tests:
+              - not_null
+          - name: message_date
+            tests:
+              - not_null
