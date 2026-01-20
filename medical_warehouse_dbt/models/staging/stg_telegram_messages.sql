@@ -10,7 +10,7 @@ SELECT
     COALESCE(views, 0) AS views,
     COALESCE(forwards, 0) AS forwards,
     loaded_at
-FROM {{ source('raw_postgres', 'staging_telegram_messages') }}
+FROM {{ source('postgres_raw', 'staging_telegram_messages') }}
 WHERE message_id IS NOT NULL
   AND channel_name IS NOT NULL
   AND message_date IS NOT NULL
