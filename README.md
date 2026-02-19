@@ -1,40 +1,66 @@
-# Medical-telegram-warehouse
-n end-to-end data pipeline for Telegram, leveraging dbt for transformation, Dagster for orchestration, and YOLOv8 for data enrichment.
-# Week 8 Interim Submission - Task 1
+# Medical Telegram Market Intelligence Pipeline
 
-- Scraped channels: @lobelia4cosmetics, @tikvahethiopia, etc.
-- Raw data lake populated: data/raw/telegram_messages/ (partitioned by date/channel)
-- Images downloaded to data/raw/images/
-- Fields collected: message_id, channel_name, message_date, message_text, has_media, image_path, views, forwards
-- Logs: logs/scraper.log
-- Challenges: [e.g., flood waits handled]
----------------------------------------------
-# Pharma Market Intelligence Pipeline – Week 12 Capstone Polish
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI - Lint & Tests](https://github.com/Beza-Oriyon/medical-telegram-warehouse/actions/workflows/ci.yml/badge.svg)](https://github.com/Beza-Oriyon/medical-telegram-warehouse/actions/workflows/ci.yml)
 
-**Base: Week 8 Telegram → dbt → YOLO → API pipeline**  
-**Current focus: Reliability, testing, interactive dashboard for finance stakeholders**
+**End-to-end data pipeline** that transforms **public Ethiopian Telegram messages** into **actionable market intelligence** for pharmaceuticals, cosmetics, and medical products.
 
-**Business reframing (finance audience):**  
-Tracking medical product mentions, prices, and visual patterns on Ethiopian Telegram channels to provide early market signals — useful for supply chain risk assessment, investment due diligence, or procurement forecasting in healthcare/pharma sector.
+### Business Value (Finance & Market Intelligence Perspective)
 
-**Week 12 Progress Highlights (as of Feb 16, 2026):**
-- Created dedicated branch for capstone improvements
-- Added basic pytest unit tests for scraper logic
-- Started interactive Streamlit dashboard (coming soon)
-- Planning SHAP explainability on YOLO results
-- CI workflow exists but needs fixes (old runs failing; local tests passing)
+In emerging markets like Ethiopia, informal Telegram channels are a key source of real-time signals for:
+- Competitive product mentions (drugs, creams, vaccines, cosmetics)
+- Pricing and demand trends
+- Counterfeit / unregulated product risk
+- Supply chain visibility
 
-**Quick Local Run (for demo):**
+This project delivers a **reproducible, tested pipeline** that:
+- Scrapes public channels
+- Loads & structures data in Postgres
+- Applies dbt for star schema
+- Enriches images with YOLOv8 object detection
+- Provides analytical API (FastAPI) and interactive dashboard (Streamlit)
+
+### Key Results (from 399 real messages)
+
+- Channels processed: lobelia4cosmetics, tikvahethiopia, medicalethiopia, etc.
+- Messages loaded & transformed: **399**
+- YOLO detections: person, bottle, bowl, clock, tie, chair, couch, etc.
+- Top keywords: "Vacancy Announcement", "Bebe cream Price", "Advertisement", "cream", "pills"
+- Interactive dashboard: live charts for top products, YOLO stats, posting trends
+- Analytical API: endpoints for top-products, channel-visuals, trends
+
+### Quick Start
+
 ```bash
-# Activate env if using venv
-# pip install -r requirements.txt   (if not done)
+# 1. Clone repository
+git clone https://github.com/Beza-Oriyon/medical-telegram-warehouse.git
+cd medical-telegram-warehouse
 
-docker-compose up -d   # Start Postgres if needed
+# 2. Create & activate virtual environment
+python -m venv venv
+.\venv\Scripts\activate          # Windows cmd
+# or .\venv\Scripts\Activate.ps1 # PowerShell
 
-# Run dbt checks
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Create .env (copy template and edit)
+copy .env.example .env
+# → Edit .env with your POSTGRES_PASSWORD
+
+# 5. (Optional) Load existing data or re-run pipeline
+python dashboard/app.py load
+
+# 6. Run dbt transformations
 cd medical_warehouse_dbt
-dbt run --models staging+   # or full run if safe
-dbt test
+dbt run
+cd ..
 
-# Run tests
-pytest ../tests/ -v
+# 7. (Optional) Run YOLO image enrichment
+python src/scripts/enrich_images_yolo.py
+
+# 8. Launch dashboard
+python -m streamlit run dashboard/app.py
+# → Open http://localhost:8501
+![alt text](image.png)
