@@ -64,3 +64,19 @@ python src/scripts/enrich_images_yolo.py
 python -m streamlit run dashboard/app.py
 # → Open http://localhost:8501
 ![alt text](image.png)
+
+
+.
+├── dashboard/                  # Streamlit dashboard (app.py)
+├── data/                       # Raw scraped JSON + images (gitignored)
+├── logs/                       # Application logs
+├── medical_warehouse_dbt/      # dbt project (models, tests, sources)
+├── src/
+│   ├── api/                    # FastAPI analytical endpoints
+│   ├── scripts/                # scraper, loader, yolo enrichment
+│   └── utils/
+├── tests/                      # pytest unit & integration tests
+├── .github/workflows/          # GitHub Actions CI (lint + tests)
+├── .env.example
+├── requirements.txt
+└── README.md
