@@ -159,15 +159,13 @@ with tab3:
     df_trend = get_trends()
     
     if not df_trend.empty:
-        # Create a single readable x-axis column (e.g. "2025-02")
+        # Create single x-axis column (Streamlit likes this)
         df_trend['year_month'] = df_trend['year'].astype(str) + '-' + df_trend['month'].astype(str).str.zfill(2)
         
-        # Use single-column index for line chart
-        chart_data = df_trend.set_index('year_month')['count']
+        # Use single index → no KeyError
+        st.line_chart(df_trend.set_index('year_month')['count'])
         
-        st.line_chart(chart_data)
-        
-        # Show full table below for clarity
+        # Show full table
         st.dataframe(df_trend[['year', 'month', 'count']])
     else:
-        st.info("No trend data available yet (check fct_messages and dim_dates tables).")
+        st.info("No trend data available yet.")
